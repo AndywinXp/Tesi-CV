@@ -1,6 +1,10 @@
 #include <stdio.h>
+
+#ifdef _WIN32
 #include <WinSock2.h>
-#include <direct.h>
+#include <direct.h> // alternativa unix unistd.h
+#endif // _WIN32
+
 #include <sys/time.h>
 
 #include <opencv/cv.h>
@@ -11,6 +15,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+
 //#include <opencv2/imgcodecs.hpp>
 #include "opencv2/highgui.hpp"
 

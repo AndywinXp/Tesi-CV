@@ -32,6 +32,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add library="libws2_32.a" />
+		</Linker>
 		<Unit filename="OV7670.cpp" />
 		<Unit filename="OV7670.h" />
 		<Unit filename="main.cpp" />

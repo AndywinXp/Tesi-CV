@@ -1,5 +1,15 @@
 #include "OV7670.h"
-#pragma comment(lib, "ws2_32.lib")
+// #pragma comment(lib, "ws2_32.lib")
+// specifico per Visual Studio, ma essendo che qui usiamo MinGW qui non funzionerà mai
+
+
+// TO DO:
+// creare delle funzioni prototipo alle quali il programma si appoggia
+// le funzioni prototipo sono wrapper che, a seconda del sistema operativo
+// per il quale si compila, scelgono le funzioni reali adatte con ifdef
+//
+// A tal proposito, cose come l'apertura di una socket vanno gestite in funzioni a parte,
+// e non dentro un unico blocco enorme di codice
 
 using namespace cv;
 
@@ -182,7 +192,7 @@ int start_OV7670()
 
 				/*Start create message to show over image*/
 				frame_ricevuti++;
-                gettimeofday(&end, NULL);
+                gettimeofday(&end, NULL); // dovrebbe andare pure in unix, spero
                 frame_rate = 1000000.0/(end.tv_usec - start.tv_usec);
                 gettimeofday(&start, NULL);
                 p_frame_persi = (100.0*frame_persi)/(frame_ricevuti);
@@ -247,7 +257,8 @@ int start_OV7670()
 
                     printf("Terminato...\n");
 
-                    closesocket(sd);
+                    closesocket(sd); // SPECIFICO PER WINDOWS, funziona solo su socket
+                                     // e non su file descriptor come la close(fd) di unix
                     WSACleanup();
 
                     exit(0);
