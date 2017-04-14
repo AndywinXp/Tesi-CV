@@ -38,5 +38,12 @@ typedef struct {
 	BYTE data_chroma[FRAME_I_SIZE];
 } packet_data;
 
+
 int start_OV7670();
+
+#ifdef _WIN32
+typedef SOCKET MY_SOCKET;
+#else
+typedef int MY_SOCKET;
+#endif
 
