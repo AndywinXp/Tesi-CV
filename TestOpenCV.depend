@@ -4,20 +4,52 @@
 	<windows.h>
 	"OV7670.h"
 
-1492170072 c:\users\andrea\desktop\tesi\client_pc_color_mattia\ov7670.h
+1492984758 c:\users\andrea\desktop\tesi\client_pc_color_mattia\ov7670.h
 	<stdio.h>
-	<WinSock2.h>
-	<direct.h>
 	<sys/time.h>
 	<opencv/cv.h>
 	<opencv/highgui.h>
 	<stdlib.h>
+	"hybrid_socket.h"
 	<opencv2/core.hpp>
 	<opencv2/core/core.hpp>
 	<opencv2/highgui/highgui.hpp>
 	<opencv2/imgproc.hpp>
 	"opencv2/highgui.hpp"
 
-1491923396 source:c:\users\andrea\desktop\tesi\client_pc_color_mattia\ov7670.cpp
+1492984211 source:c:\users\andrea\desktop\tesi\client_pc_color_mattia\ov7670.cpp
 	"OV7670.h"
+
+1492984442 source:c:\users\andrea\desktop\tesi\client_pc_color_mattia\hybrid_socket.c
+	"hybrid_socket.h"
+
+1492985932 c:\users\andrea\desktop\tesi\client_pc_color_mattia\hybrid_socket.h
+	<stdlib.h>
+	"OV7670.h"
+	<WinSock2.h>
+	<direct.h>
+	<unistd.h>
+
+1492984727 source:c:\users\andrea\desktop\tesi\client_pc_color_mattia\hybrid_socket.h
+	<stdlib.h>
+	"OV7670.h"
+	<WinSock2.h>
+	<direct.h>
+	<unistd.h>
+
+1492984758 source:c:\users\andrea\desktop\tesi\client_pc_color_mattia\ov7670.h
+	<stdio.h>
+	<sys/time.h>
+	<opencv/cv.h>
+	<opencv/highgui.h>
+	<stdlib.h>
+	"hybrid_socket.h"
+	<opencv2/core.hpp>
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	<opencv2/imgproc.hpp>
+	"opencv2/highgui.hpp"
+
+1492985593 source:c:\users\andrea\desktop\tesi\client_pc_color_mattia\hybrid_socket.cpp
+	"hybrid_socket.h"
 

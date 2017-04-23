@@ -78,73 +78,17 @@ int convert_from_yuv_to_bgr(IplImage *LUMA, IplImage *CHROMA, int color_code, Ip
    return 0;
 }
 
-MY_SOCKET init_hybrid_sock(long buffer)
-{
-    #ifdef _WIN32
-    struct sockaddr_in clientaddr, servaddr;
-	int len;
-
-    WSADATA wsa;
-	//Initialise winsock
-	printf("\nInitialising Winsock...");
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-	{
-		printf("Failed. Error Code : %d", WSAGetLastError());
-		exit(EXIT_FAILURE);
-	}
-
-	/* PREPARAZIONE INDIRIZZO CLIENT E SERVER ----------------------------- */
-	memset((char *)&clientaddr, 0, sizeof(struct sockaddr_in));
-	clientaddr.sin_family = AF_INET;
-	clientaddr.sin_addr.s_addr = INADDR_ANY;
-	clientaddr.sin_port = htons(5555);
-
-	printf("Client avviato\n");
-
-	/* CREAZIONE SOCKET ---------------------------- */
-	SOCKET sd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sd == INVALID_SOCKET) { perror("apertura socket"); exit(3); }
-
-	printf("Creata la socket sd=%d\n", (int) sd);
-
-	/* BIND SOCKET, a una porta scelta dal sistema --------------- */
-	if (bind(sd, (struct sockaddr *) &clientaddr, sizeof(clientaddr)) == SOCKET_ERROR)
-	{
-		perror("bind socket ");
-		exit(1);
-	}
-	printf("Client: bind socket ok, alla porta %i\n", ntohs(clientaddr.sin_port));
-
-	if (setsockopt(sd, SOL_SOCKET, SO_RCVBUF, (char*)&buffer, 8) == -1) {
-		fprintf(stderr, "Error setting socket opts: %d\n", WSAGetLastError());
-	}
-    else printf("Settato buffer\n");
-    #endif // _WIN32
-
-    return (MY_SOCKET) sd;
-}
-
-void clean_socket_hybrid(MY_SOCKET sd)
-{
-    #ifdef _WIN32
-    closesocket((SOCKET) sd); // SPECIFICO PER WINDOWS, funziona solo su socket
-                     // e non su file descriptor come la close(fd) di unix
-    WSACleanup();
-    #endif // _WIN32
-}
-
 int start_OV7670()
 {
 	struct sockaddr_in clientaddr, servaddr;
 	int len;
     long buffer = 65536 * 1024;
 
-
 	//Initialise OpenCv
 	init_my_opencv();
 
-	//Initialise winsock
-	MY_SOCKET sd = (MY_SOCKET) init_hybrid_sock(buffer);
+	//Initialise socket
+	HYBRID_SOCKET sd = (HYBRID_SOCKET) init_socket_wrapper(buffer, &clientaddr, &servaddr);
 
 	packet_data *tmp = (packet_data*)malloc(sizeof(packet_data));
 
@@ -170,12 +114,14 @@ int start_OV7670()
 	printf("In attesa di frame...\n");
 	MessageBox(NULL, "Q - Quit the application\nS - Save current frame to folder", "Command list", MB_ICONINFORMATION | MB_OK | MB_DEFBUTTON2);
 
+	// Main loop
 	while (1)
 	{
 	    // anche questa da ibridizzare, mondo cane.
 	    // ad esempio receive_packet_hybrid()
-
-		if (recvfrom(sd, (char*)tmp, sizeof(packet_data), 0, (struct sockaddr *)&servaddr, &len) == SOCKET_ERROR)
+        int error_check = 0;
+        error_check = recvfrom_socket_wrapper(sd, (void*)tmp, sizeof(packet_data), 0, (struct sockaddr *)&servaddr, &len);
+		if (error_check == SOCKET_ERROR)
 		{
 			perror("rcvfrom\n");
 			printf("Errore nella ricezione di un pacchetto, ultimo arrivato: frame index -> %d, i -> %d\n", tmp->frame_index, tmp->fragment);
@@ -275,7 +221,7 @@ int start_OV7670()
 
                     printf("Terminato...\n");
 
-                    clean_socket_hybrid(sd);
+                    close_socket_wrapper(sd);
 
                     exit(0);
                 }

@@ -37,6 +37,8 @@
 		</Linker>
 		<Unit filename="OV7670.cpp" />
 		<Unit filename="OV7670.h" />
+		<Unit filename="hybrid_socket.cpp" />
+		<Unit filename="hybrid_socket.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
