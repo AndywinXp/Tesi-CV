@@ -2,10 +2,6 @@
 // #pragma comment(lib, "ws2_32.lib")
 // specifico per Visual Studio, ma essendo che qui usiamo MinGW qui non funzionerà mai
 
-/* TODO (Andrea#9#04/14/17): Creare una funzione ibrida di ricezione pacchetto.
-Il resto sembra funzionare bene (apertura e chiusura).
-(Per ora) */
-
 
 using namespace cv;
 
@@ -112,8 +108,11 @@ int start_OV7670()
 	int last_counter = 0;
 
 	printf("In attesa di frame...\n");
+	#ifdef _WIN32
 	MessageBox(NULL, "Q - Quit the application\nS - Save current frame to folder", "Command list", MB_ICONINFORMATION | MB_OK | MB_DEFBUTTON2);
-
+    #else
+    printf("Q - Quit the application\nS - Save current frame to folder");
+    #endif
 	// Main loop
 	while (1)
 	{
@@ -196,7 +195,11 @@ int start_OV7670()
                     cvSaveImage("BGR.png", image_BGR);
 
                     //Confirmation Dialog Box
+                    #ifdef _WIN32
                     MessageBox(NULL, "Images Correctly Saved!", "Success!", MB_ICONINFORMATION | MB_OK | MB_DEFBUTTON2);
+                    #else
+                    printf("Images Correctly Saved!");
+                    #endif
                 }
                 else if (key == 'q')//Quit the application
                 {

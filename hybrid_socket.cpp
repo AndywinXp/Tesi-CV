@@ -1,11 +1,12 @@
 #include "hybrid_socket.h"
 
-void close_socket_wrapper(HYBRID_SOCKET sd)
+int close_socket_wrapper(HYBRID_SOCKET sd)
 {
     #ifdef _WIN32
-    closesocket((SOCKET) sd); // SPECIFICO PER WINDOWS, funziona solo su socket
-                     // e non su file descriptor come la close(fd) di unix
+    int code = closesocket((SOCKET) sd); // SPECIFICO PER WINDOWS, funziona solo su socket
+                                     // e non su file descriptor come la close(fd) di unix
     WSACleanup();
+    return code;
     #endif // _WIN32
 }
 
@@ -48,17 +49,19 @@ HYBRID_SOCKET init_socket_wrapper(long buffer, struct sockaddr_in *clientaddr, s
 		fprintf(stderr, "Error setting socket opts: %d\n", WSAGetLastError());
 	}
     else printf("Settato buffer\n");
+    #elifdef __linux
+
     #endif // _WIN32
 
     return (HYBRID_SOCKET) sd;
 }
 
-int recvfrom_socket_wrapper(HYBRID_SOCKET s, void *buf, int len, int flags, struct sockaddr *from, int *fromlen)
+BYTES_NUM recvfrom_socket_wrapper(HYBRID_SOCKET s, void *buf, int len, int flags, struct sockaddr *from, int *fromlen)
 {
     #ifdef _WIN32
-        return recvfrom((SOCKET) s, (char*)buf, len, flags, (struct sockaddr *)&from, fromlen);
+        return (BYTES_NUM) recvfrom((SOCKET) s, (char*)buf, len, flags, (struct sockaddr *)&from, fromlen);
     #else
-        return 1;
+        return (BYTES_NUM) 1;
         // return ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen);
     #endif // _WIN32
 }
